@@ -1,9 +1,7 @@
 package com.company;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 /*
  * Simple ADFGVX cipher solver written in Java.
@@ -13,23 +11,84 @@ import java.util.Map;
 public class Main {
 
     public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+
         //ciphertext
-        String s = "ABCDEF";
-        //get transposition columns
-        char[][] columns = getTranspositionColumns(s, 2, 3);
-        //convert columns to list form
-        List<List<Character>> cList = matrixToList(columns,  2, 3);
-        //get all possible permutations of the columns
-        List<List<List<Character>>> perms = new ArrayList<>();
-        heapPermutation(cList, perms, cList.size());
-        //get the pre-transposition CT
-        String ct = getPreTranspositionCT(perms.get(0));
-        //split ct into pairs
-        List<String> pairs = getPairs(ct);
-        //Map<String,Integer> frequencies = getFrequency(pairs);
-        //List<Map.Entry<String,Integer>> orderFrequency = orderFrequency(frequencies);
-        //System.out.println("here: " + orderFrequency);
-        //test pairs with different possible combinations
+//        String s = "ABCDEF";
+//        //get transposition columns
+//        char[][] columns = getTranspositionColumns(s, 2, 3);
+//        //convert columns to list form
+//        List<List<Character>> cList = matrixToList(columns,  2, 3);
+//        //get all possible permutations of the columns
+//        List<List<List<Character>>> perms = new ArrayList<>();
+//        heapPermutation(cList, perms, cList.size());
+//        //get the pre-transposition CT
+//        String ct = getPreTranspositionCT(perms.get(0));
+//        //split ct into pairs
+//        List<String> pairs = getPairs(ct);
+//        //Map<String,Integer> frequencies = getFrequency(pairs);
+//        //List<Map.Entry<String,Integer>> orderFrequency = orderFrequency(frequencies);
+//        //System.out.println("here: " + orderFrequency);
+//        //test pairs with different possible combinations
+
+        String ct = "oAnFpApGnGpDoFoDmXpGnXnGpAlAoGoDpFoGoAmDnFmGoAoDoAlFpDnFmGoGoAmDlAnXoAlAmGoGnGmXoDlGoDpGpDoGnGoAlApAoGoFnDlAlXpGoFpGnXlAoDpAnAmDoGlFnDlAoGnFmDoAlGoAoDoAlApAmGpAnAnGnApGoDpFlFlAnFmFnGpAoXnGoFoDnFoGoDlAmGpFmAmDpGoApGoAnAnGnFoDoGoApGoAnXnGnGpGnApFoFmGnGoDnFnGoAnFpFnFlAlDoGoDlGnGnFoFlAmDlAnAlDoDoFlAlFmGoAmFmAoAnGoAoGpAnApGoGnGnGpGoGpAnGnApDmDoAmFmDoDoFpDnApFoAoFnDlAnAnFpGpDoFoGoApAoGnGpFnGmAoFnGlDoApDoAnAoGoGoDnAoFlXnFpFmGpDpDnApGpAnXnXpAnGpDoFoApApAmXnFpGoFmApAlAlGoGpFlGnAnGoGnGoGnGoFoAnXoGpXoAmDoFlAlGpFoAoGpFnDlGnAoDnFnFpGoAmGoGnAoDlAmFoAnFnGpGoFnXpApDpAoFmGoFnAoAmXpFmFoGpFoAlFpGmGnGoAmGoFmApAoApAoAoGlGmFpGoGpDoAmAlGlFmAoGmDpDnXpGoAlFnDmFpAnAoFoGoDlFnGlApAlGmGnGlDoDpGoFoFmDoDpGnGmDoFoGnFpGoAlAnAlGoAoAmAnAlDnFlGmDnXoFoAlFpGoXpFoAoFoAoApAoFnFoAoAoGoAnFnGoFmDlFlFoFlApDoAmFoGlAlAmGpGpGoFoAnFoDnAnXpXnGpFoXoXlAmGoGnFoAnAnDnFlAoDpGnFoAoFnGoGoGlFlDpAmGlGnXpDpGnGpAoAnGoGpDoGpFpGoFmGoAoFnGnFpFoDoFoAnFpFlXoAoFlFnAlFoApAoFnFmDoFmFmApAmGoFoAnFoGlGnGmAlAnAnDpAmFoAnFmGoGpFpFlDlGnFoApAnApAoFoFmXpGpDpAoGoGlDoFlXpGoXpFmGoAoAoAoFlGpAmAnFlFnFnApGnFoFpDnFpGoGnAlFmDnAnGnFmGmFoFnXoGpXoAmDoFlAoDpGpDnXoGoDoDlAnGmFpAlXlGoAlFnGnDoDpAoGnAoGoDlDoDoGoDlGmFpFmFlGpAnApGnGpDoFoAoGlGoAmAoGlAmAmDoAoGmAmFlGpGpGoAlGoDlDoApXpFpAnApGnXpAnFlAmAnAoAlDoDlGoFmGnDpAnGnGnGpXpAnDpFlGnGoFnFlGnGoAoAoDpGlAlApGpGnDpAmFmGmFlAoDoDpGlFoDpFlAmAnAoFpAnFnGoFmGpAmGnDpFpGmGnDlGoAoAoGnGoDlAoFnGpDoFmXoDnGnGoApGnDoDoDoFpDlDnFpGnGoFlGoAmFnAnAoDmFnXpDlFnFnGnApFoFmFpAoDpFoDlDnGnGoFlGnGoGlFnAmGnDpFmGlFoFmDoAlXnFoDnAlFpAmDoGnGnFlFoGoDlAmGnGoFoAlDoDnAoGpAmDoAnFoDoGnApFoFmGoGoDoApGnFlGlXpDnApFoAoGnApAnXpGlDoFmFpAoAoGnFlAnDmGoApDpGnGlAmAmAlAmAlXlDoAlXnFpDpGoDpGoAoDpApGnGlGmAmDmXpGmFnFoGlAnAoDlAnAmXoDlFlFpApFoDlAnDoGoFmGoDnFlFpAmDpGpAnGoAnGnDpApFoAoFpAnAlDpApGnAoFpFlGoDoAlAoAlAoGnGlAmAoDmFoFpAoGnGoDmDpApApGlDpDnAnFmeeGnFoAoAnDpAnApGnGlAoFoDpAnAmXmGoAoApGmFlFoDmDlDnFnAmGnGlFoGlFlApFoGlFoDmFpGmAoGpDoAmDnAnAmFmDlDnFpAnAoGoAoXpAmAoGoAlAnAoGoAnFoGoDoDmFoAnApDpGoDnFmDlDnDnFpAoAlAmFoFoDmAnFmAnDnAnGoApAnFoAmGoApGnFoApGmAlGoFmDmFoAlGoFlGmFoFoDpDlGlXoFlGmFoDoDlAoDpGoAoDoGoDmFlAoGmGlFmXoAoFoDlXlXpDoGlAoFlGnAoGnFlFoGnAmDmFmGnGlGoDmDlAnXpFmGoAnFlDpFoAoGlAnFoDmAoFpFlGnGoFnFoAoDoAnDnGoFpAoGmAlApAnApGlGnAnFlDpAnFnGpGoFpAoGnGnGpGoGpGnFpDlFmFpAoFmFoAoAoDoAnAlFoGpAnGpAnApGnAnAoGmGpFoGlGmFpFoAnGlAmXpFmFoDnDpFpDpFmGpAoDlAmDnGpFmAnAoAmGpGoAnFnFpDpDlGoFnAlFlGlFmDpDlFmGlAmAoGoGnDoDlAnAlAlAoFpDoAmGoDoAmFpGpGlGmAoAnXoDoGmDlAoGlAnFmAmAlApAlGoFnFnGnGnDmAoAoGoAnGoAoGpAnXnXpDpFpAmFoAmApGnXoGpXoAmDoFnDlFlAoAmFpAmGpFmGmDpGpFmDnDpAnApAoGnXpFpGnAlFoFlGoAnXnAnFpAnXpGoDlAmFnXoGoDmGlGoFlAmDnApDnGoGoGoDoAoAoGpAnAoGnDoAnAnAmXlAnAnDlGoAoFmAmAoAmDoFoDnGoAmXpGpFoAoFnFoAoAoAoAlGoDlGoFoGpFmAmDoAoXpAnDlAnApDoFlAmFoGoGnFmApAnDoGpDmAoDoDoAoFnFlAmAlAlAoFnGpDnAoFlApGnGoFlGpFmAoDmFnGlDnFmFmFmAoDoDmAoGoAnAlFpGmGoGpGoApFpAmAoDoGnFmGoAnXlAoGpAmAoAoGpDoAoFnDpAnGoApXpGnGnAnGoAlAmAmDlFoAoFnAlDlGnGmGpFoGpGnXpGlGpDoAoFoFpGoAoDlAmDnGpFmAnApAnAoAoDlDmGnAoGoDpAmFlFoGpAmFmDpDmAnFlDpFoFmAlDnDnFmAnGlDoDnDpFmGoAnGpAnApGnXpAlFnGlAlAmFmGoGnFnAoGoDoGnApGnAnFnAoFnAoApFmGoAnDlAnFoAnDmFoApAoFnAnFoXoDoAlAoDlDpAmAoGoAmXpFoFlDoAoDpDmGnGoAnAoAnApAoDpAoGlFoGoFlGmDnAnAmDnAoAnDmFoFlAmGoAlAoDoGlGoGoAnGnGoDpAnGnGnXpGoFnFoAlAlAoFmGoDoFmDpGpAnGoFnFmGnAnAnAlAoAlDoDpGnGnFnAoAnFoDlAnAlGoApDpGoAoDnGnAoAoDoAlFoGoDlAmGpFmAmFnFpGoAlXpDlFmGoDnFlAoGlFpAlGnGoFmDpGpDoApGmAlGoGoApGnFoFpDnXpDnXoGnFlDnFlDpGoAoDpDoGoDnAlDoAnAmAoDoAnDnGoDmAnFpAmAmGnFpAoAnXpDlFmGlGnFnGpAoDlDpGpGoDoGnAoAnDnFlGpFlAoFoAmDlDnGnAmDoFlDpGnXlAnGlApDpAlFnAoDpGnDpDoAnAlAmAoDnAmDoDoFmApGnGnAlAmGnAnAnGpGpGoDpAnAnGnGoGnFmAnGnAmDpFmAmDoGoDnAlAmAnFnDoFpDpGmDlAmGnGoDoGmDoAmDpDlAlAlGoFoDeeDpDnGpFoFmGoAnGmAlDnFmAmFpGmApGnFlAnGpAoDnApFoFmFnFpGoAlFnAnFoGoGlAmFoGlAnGpGpAmGnAmApXoGoGoAoFnGoGlDnDnGoAnGlAnFnAmDmXlGnApGpFlGnGoGlAlAoAoDmFlApFoFmFnGoAlAnFpGlAoGpGoGoGoGpApGoAoApDpAoGpAnGoDnGnGoFlGnGoGlGnAmApAmFpGlAoAmFoAmApAmFpGmFnAmAoAmDlDnDoFmDoAlFnXlApGoDmGpXlDoDoAoFpAnAoFlGnXpDlFmGoGnFpGoGpDpDoAmGnAmDlAnGpDoFoDoApDoAnAoGlAoGpGoAmXpFoFlDoDnDmGpFnFpXoAnXpApAmFmGoAnAoDpFoDoAmAoGoGnDoAmFlDpFoAoGlAnDmGmAnFpAnFmGoDnFlDmGpFnXpGoAlFlFmGoAnDpFoAlFoGpFmDoGpGmDnFnAoDoAmFpGnFoAnGoFmFoAoDlFnGlApAlGmFoGoFpAoFmAoAoAoAoXoDoGlDoXpDmFoAnXoXlAnGpFnGmAoFnAoGmFoXpDnAmGoGlDnFlGnAnAlAlGpGmFoDoFpGpAmGoAnDpGoGpDpAmFoFoGoAmGnDpGpGmDlFlGoDpFlAlFoGpAnAoFlFpGpFoAnAoDlAmDnGpFmGoAoAoGnDmGnXoDlGlGoAmAlGmFoAnXoAnApDpAoAoDpFlAlFoFnAoDoDmGlDlApGnFlGmFpDnFnGnFlDoAnGlGpFmApDnDnDnGnGmDnAnFnFlDpFlGoFoGoAnGnFoAlFpFnFoGpFlGoDnFlAoFmGoAnAmDnDlGlGoDpGpGnAnDmFlDoDnFmDmFoGnAlAnAoAoGpFoDnFpDpFoFmFlGmAlAoFnAoGpGoDnFmDnDoAnApAmAnAlAlAoGoDlAnAoAlDoAlAlGmDoGlDpAmDoDpAoFnXnDnGpGpGlDoXpAnXlGoAnFmFoGlGlDoDnDpGpDoFnAnGoAlGnGnApAmFmGoFoAnApDlFoAmDlDlGpDnDoGlGlAmDnFlGoAoAlDoDnGpFmAmDlApAoAoDnFmDoAnGoDlFnGlApAlGmFoAlFnFlDlFmDnGnXpDnAnGlFoDnAoFoDoAnDnFoDoAmGoFnFlFnGoGoFnAnDnGoGnGpDoFoFmGoAnDlAnFnGpXpAnFpApFlDpGpFlAoGmGoAnDpGnAoGoFmGmAnGpDoFoAoGlAlFoGlGpGnGoFnGoAoDoGnDlGoAoAnGlAlGnDoAmFmDoDoGoAoFpDlGnGoGpAnFoAoAlApAlFmDlAnXnAnGoAlGnAlFoGlGnFlDpDnFpDnFnAnFnGnAoFoXoAlAoDlDlAnGmFmXlXoAoAlGpFlAoDoAnGoFoFlDoXoDmAnFoAlApAoFnGmDpAoFpGpDoGoAoGnFlDnAoAmDlDnDoGpGnDnGoFoApGmAlGoFmDmFoAlFpGnFoAmFoGoDmFlFoFnAoAoDoFoXlGoApAoDnGnGoFlGnGpAnGlGnGmDlAnFpFlDpAmFmDoAmDlDnFmFmFnGoAoDnFpGoDmGpFnFpXoGpDpAlGnXoAoFlGpDlAnAlXlDoGoAnFoAoAoAmGlXlGpDpGmGlFlFoGpFoAoGnApFoFmFoGoDnAmAlAnAoFoAnAlAnDpApFlFlGlAmGnGmFlGnDlFmGnFlGnXnGoDoGmFlGlAnXoFoGnFlGoAlFnGoDlXoAlGpAnFoGoAnGnGoDoFlFoFpDpFoFoDnAoAlXoAnAoFoFoDnXoGnGlDlAmFoFoGpDneee";
+        //It's already lower/uppercase pairs and we don't need to reverse transposition. But we do need to remove the "e"s.
+        //Note: I am assuming the "e"s are meaningless and can be removed, but it may be worthwhile to look back again later.
+        ct = ct.replaceAll("e", "").toLowerCase();
+
+        System.out.println("Enter the number of maximum attempts I should make:\n");
+        int maxAttempts = in.nextInt();
+
+        //Making the first key.
+        Map<String, Character> keyMap = getKeyMap();
+
+        int attempt = 0;
+        int bestAttempt = -1;
+        String bestPT = "";
+        String bestCurrentPT = "";
+        double bestScore = -1.0;
+        double bestCurrentScore = -1.0;
+        Map<String, Character> bestKey = new HashMap<>();
+        Map<String, Character> bestCurrentKey = new HashMap<>();
+        boolean shouldTryAgain = false;
+        Set<Map<String, Character>> usedKeys = new HashSet<>();
+
+        while(attempt < maxAttempts) {
+            if(shouldTryAgain) {
+                //Struggling to find a new key from this variation, start again with a new random key.
+                shouldTryAgain = false;
+                bestCurrentScore = -1.0;
+                keyMap = getKeyMap();
+            } else {
+                //Get next key normally.
+                changeKey(keyMap);
+            }
+            String plaintext = decipher(ct, keyMap);
+            double score = getScore(plaintext);
+            //Higher score is better
+            if(score >= bestCurrentScore) {
+                bestCurrentScore = score;
+                bestCurrentKey = keyMap;
+                System.out.println("\n\n");
+                System.out.println(plaintext);
+                System.out.println(score);
+                System.out.println(keyMap.toString());
+                System.out.println("\n\n");
+                if(score >= bestScore) {
+                    bestScore = score;
+                    bestKey = keyMap;
+                    bestPT = plaintext;
+                    bestAttempt = attempt;
+                }
+            }
+
+            attempt++;
+        }
+
+        System.out.println("Best try on attempt number " + bestAttempt + " scored " + bestScore + ".");
+        System.out.println("Key: " + bestKey.toString());
+        System.out.println("Plaintext:");
+        System.out.println(bestPT);
     }
 
     /**
@@ -169,5 +228,44 @@ public class Main {
             }
             System.out.println();
         }
+    }
+
+    /**
+     * Creates a new randomized key map.
+     * @return a random Map of [ct pair] => [pt char]
+     */
+    public static Map<String, Character> getKeyMap() {
+        //Without j since it's mixed in with i.
+        List<Character> alphabet = Arrays.asList('a','b','c','d','e','f','g','h','i','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
+        //Possible row/col combos. lmnop . adfgx
+        List<String> ctCombos = Arrays.asList("la","ld","lf","lg","lx","ma","md","mf","mg","mx","na","nd","nf","ng","nx","oa","od","of","og","ox","pa","pd","pf","pg","px");
+
+        //Shuffle the alphabet.
+        Collections.shuffle(alphabet, new Random());
+
+        Map<String, Character> keyMap = new HashMap<>();
+        for(int i = 0; i < ctCombos.size(); i++) {
+            keyMap.put(ctCombos.get(i), alphabet.get(i));
+        }
+
+        return keyMap;
+    }
+
+    /**
+     * Makes a small change to the key map by swapping values for two keys.
+     * @updates keyMap - the map that will be changed
+     */
+    public static void changeKey(Map<String, Character> keyMap) {
+        Random rand = new Random();
+        List<String> keys = new ArrayList<>(keyMap.keySet());
+
+        //Get random keys to swap.
+        String k1 = keys.get(rand.nextInt(keys.size()));
+        String k2 = keys.get(rand.nextInt(keys.size()));
+
+        //Swap.
+        Character c1 = keyMap.get(k1);
+        keyMap.replace(k1, keyMap.get(k2));
+        keyMap.replace(k2, c1);
     }
 }
