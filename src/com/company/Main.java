@@ -68,7 +68,8 @@ public class Main {
             //Higher score is better
             if(score >= bestCurrentScore) {
                 bestCurrentScore = score;
-                bestCurrentKey = keyMap;
+                bestCurrentKey.clear();
+                bestCurrentKey.putAll(keyMap);
                 System.out.println("\n\n");
                 System.out.println(plaintext);
                 System.out.println(score);
@@ -76,10 +77,15 @@ public class Main {
                 System.out.println("\n\n");
                 if(score >= bestScore) {
                     bestScore = score;
-                    bestKey = keyMap;
+                    bestKey.clear();
+                    bestKey.putAll(keyMap);
                     bestPT = plaintext;
                     bestAttempt = attempt;
                 }
+            } else {
+                //Didn't get a better score. Reset back to the current best key so we can find a new one off the current best.
+                keyMap.clear();
+                keyMap.putAll(bestCurrentKey);
             }
 
             attempt++;
