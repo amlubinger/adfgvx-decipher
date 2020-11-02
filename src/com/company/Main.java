@@ -61,7 +61,7 @@ public class Main {
                 keyMap = getKeyMap();
             } else {
                 //Get next key normally.
-                changeKey(keyMap);
+                shouldTryAgain = nextKey(keyMap, usedKeys);
             }
             String plaintext = decipher(ct, keyMap);
             double score = getScore(plaintext);
@@ -249,6 +249,35 @@ public class Main {
         }
 
         return keyMap;
+    }
+
+    /**
+     * Find the next key given the current key and the set of used keys. If a new key can't be found in a timely manner,
+     * return true to indicate that we should start over with a brand new random key.
+     * @param keyMap - the current key which should be used to find the next key with small changes
+     * @param usedKeys - set of keys that have been tried already
+     * @return whether or not we should start over with a new key (true if couldn't find an unused key from current key)
+     */
+    public static boolean nextKey(Map<String, Character> keyMap, Set<Map<String, Character>> usedKeys) {
+        Map<String, Character> keyCopy = new HashMap<>(keyMap);
+        int tries = 0;
+
+        //Try to find a new key only a certain number of times before giving up.
+        while(usedKeys.contains(keyCopy) && tries < 100000) {
+            keyCopy = new HashMap<>(keyMap);
+            changeKey(keyCopy);
+            tries++;
+        }
+
+        //Either start over with new random key or set the new key and add it to used keys.
+        if(tries >= 100000) {
+            return true;
+        } else {
+            keyMap.clear();
+            keyMap.putAll(keyCopy);
+            usedKeys.add(keyMap);
+            return false;
+        }
     }
 
     /**
