@@ -45,7 +45,6 @@ public class Main {
         int attempt = 0;
         int bestAttempt = -1;
         String bestPT = "";
-        String bestCurrentPT = "";
         double bestScore = -1.0;
         double bestCurrentScore = -1.0;
         Map<String, Character> bestKey = new HashMap<>();
@@ -302,5 +301,39 @@ public class Main {
         Character c1 = keyMap.get(k1);
         keyMap.replace(k1, keyMap.get(k2));
         keyMap.replace(k2, c1);
+    }
+
+    /**
+     * Convert the ciphertext to plaintext given a key map of ct pairs to pt chars.
+     * @param ct - the ciphertext to convert
+     * @param keyMap - the key map to convert ct pairs to pt characters
+     * @return the plaintext
+     */
+    public static String decipher(String ct, Map<String, Character> keyMap) {
+        StringBuilder pt = new StringBuilder();
+
+        //Get each pair in the ct and find the corresponding pt character from the key map. Add that to the pt.
+        for(int i = 0; i < ct.length(); i += 2) {
+            pt.append(keyMap.get(ct.substring(i, i + 2)));
+        }
+
+        return pt.toString();
+    }
+
+    /**
+     * Score a plaintext using English tetragram frequencies.
+     * @param pt - the plaintext to score
+     * @return the cumulated score
+     */
+    public static Double getScore(String pt) {
+        Double score = 0.0;
+
+        //Go through the
+        for(int i = 0; i < pt.length() - 3; i++) {
+            String quartet = pt.substring(i, i + 4);
+            score += 1; //Todo - replace 1 with a check to the tetragram frequencies.
+        }
+
+        return score;
     }
 }
