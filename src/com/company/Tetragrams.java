@@ -12,12 +12,12 @@ public class Tetragrams {
 
     static {
         try {
-            File file = new File("english_quadgrams.txt");
+            File file = new File("tetragrams.txt");
             Scanner s = new Scanner(file);
             while (s.hasNextLine()) {
                 String data = s.nextLine();
                 String tetragram = data.substring(0,data.indexOf(" ")).toLowerCase();
-                double count = Integer.parseInt(data.substring(data.indexOf(" ") + 1, data.length()));
+                double count = Double.parseDouble(data.substring(data.indexOf(" ") + 1, data.length()));
                 tetragrams.put(tetragram, count);
             }
         } catch (FileNotFoundException e) {

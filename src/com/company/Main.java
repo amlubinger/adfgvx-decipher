@@ -34,7 +34,7 @@ public class Main {
         Map<String, Character> bestKey = new HashMap<>();
         Map<String, Character> bestCurrentKey = new HashMap<>();
         boolean shouldTryAgain = false;
-        Set<Map<String, Character>> usedKeys = new HashSet<>();
+        Set<String> usedKeys = new HashSet<>();
         //tetragrams
         Tetragrams t = new Tetragrams();
         Map<String, Double> tetragrams = t.getTetragrams();
@@ -52,6 +52,9 @@ public class Main {
             }
             String plaintext = decipher(ct, keyMap);
             double score = getScore(plaintext, tetragrams);
+            if(attempt % 1000 == 0) {
+                System.out.println(attempt + " " + score);
+            }
             //Higher score is better
             if(score >= bestCurrentScore) {
                 bestCurrentScore = score;
@@ -251,12 +254,12 @@ public class Main {
      * @param usedKeys - set of keys that have been tried already
      * @return whether or not we should start over with a new key (true if couldn't find an unused key from current key)
      */
-    public static boolean nextKey(Map<String, Character> keyMap, Set<Map<String, Character>> usedKeys) {
+    public static boolean nextKey(Map<String, Character> keyMap, Set<String> usedKeys) {
         Map<String, Character> keyCopy = new HashMap<>(keyMap);
         int tries = 0;
 
         //Try to find a new key only a certain number of times before giving up.
-        while(usedKeys.contains(keyCopy) && tries < 100000) {
+        while(usedKeys.contains(keyCopy.toString()) && tries < 100000) {
             keyCopy = new HashMap<>(keyMap);
             changeKey(keyCopy);
             tries++;
@@ -264,11 +267,12 @@ public class Main {
 
         //Either start over with new random key or set the new key and add it to used keys.
         if(tries >= 100000) {
+            System.out.println("Resetting local best.");
             return true;
         } else {
             keyMap.clear();
             keyMap.putAll(keyCopy);
-            usedKeys.add(keyMap);
+            usedKeys.add(keyMap.toString());
             return false;
         }
     }
@@ -319,7 +323,7 @@ public class Main {
         //Go through the
         for(int i = 0; i < pt.length() - 3; i++) {
             String quartet = pt.substring(i, i + 4);
-            score = (tetragrams.containsKey(quartet)) ? tetragrams.get(quartet) : 1.0; //Todo - replace 1 with a check to the tetragram frequencies.
+            score += (tetragrams.containsKey(quartet)) ? tetragrams.get(quartet) : 1.0;
         }
 
         return score;
