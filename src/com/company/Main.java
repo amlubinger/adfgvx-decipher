@@ -1,6 +1,8 @@
 package com.company;
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 /*
@@ -12,24 +14,6 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-
-        //ciphertext
-//        String s = "ABCDEF";
-//        //get transposition columns
-//        char[][] columns = getTranspositionColumns(s, 2, 3);
-//        //convert columns to list form
-//        List<List<Character>> cList = matrixToList(columns,  2, 3);
-//        //get all possible permutations of the columns
-//        List<List<List<Character>>> perms = new ArrayList<>();
-//        heapPermutation(cList, perms, cList.size());
-//        //get the pre-transposition CT
-//        String ct = getPreTranspositionCT(perms.get(0));
-//        //split ct into pairs
-//        List<String> pairs = getPairs(ct);
-//        //Map<String,Integer> frequencies = getFrequency(pairs);
-//        //List<Map.Entry<String,Integer>> orderFrequency = orderFrequency(frequencies);
-//        //System.out.println("here: " + orderFrequency);
-//        //test pairs with different possible combinations
 
         String ct = "oAnFpApGnGpDoFoDmXpGnXnGpAlAoGoDpFoGoAmDnFmGoAoDoAlFpDnFmGoGoAmDlAnXoAlAmGoGnGmXoDlGoDpGpDoGnGoAlApAoGoFnDlAlXpGoFpGnXlAoDpAnAmDoGlFnDlAoGnFmDoAlGoAoDoAlApAmGpAnAnGnApGoDpFlFlAnFmFnGpAoXnGoFoDnFoGoDlAmGpFmAmDpGoApGoAnAnGnFoDoGoApGoAnXnGnGpGnApFoFmGnGoDnFnGoAnFpFnFlAlDoGoDlGnGnFoFlAmDlAnAlDoDoFlAlFmGoAmFmAoAnGoAoGpAnApGoGnGnGpGoGpAnGnApDmDoAmFmDoDoFpDnApFoAoFnDlAnAnFpGpDoFoGoApAoGnGpFnGmAoFnGlDoApDoAnAoGoGoDnAoFlXnFpFmGpDpDnApGpAnXnXpAnGpDoFoApApAmXnFpGoFmApAlAlGoGpFlGnAnGoGnGoGnGoFoAnXoGpXoAmDoFlAlGpFoAoGpFnDlGnAoDnFnFpGoAmGoGnAoDlAmFoAnFnGpGoFnXpApDpAoFmGoFnAoAmXpFmFoGpFoAlFpGmGnGoAmGoFmApAoApAoAoGlGmFpGoGpDoAmAlGlFmAoGmDpDnXpGoAlFnDmFpAnAoFoGoDlFnGlApAlGmGnGlDoDpGoFoFmDoDpGnGmDoFoGnFpGoAlAnAlGoAoAmAnAlDnFlGmDnXoFoAlFpGoXpFoAoFoAoApAoFnFoAoAoGoAnFnGoFmDlFlFoFlApDoAmFoGlAlAmGpGpGoFoAnFoDnAnXpXnGpFoXoXlAmGoGnFoAnAnDnFlAoDpGnFoAoFnGoGoGlFlDpAmGlGnXpDpGnGpAoAnGoGpDoGpFpGoFmGoAoFnGnFpFoDoFoAnFpFlXoAoFlFnAlFoApAoFnFmDoFmFmApAmGoFoAnFoGlGnGmAlAnAnDpAmFoAnFmGoGpFpFlDlGnFoApAnApAoFoFmXpGpDpAoGoGlDoFlXpGoXpFmGoAoAoAoFlGpAmAnFlFnFnApGnFoFpDnFpGoGnAlFmDnAnGnFmGmFoFnXoGpXoAmDoFlAoDpGpDnXoGoDoDlAnGmFpAlXlGoAlFnGnDoDpAoGnAoGoDlDoDoGoDlGmFpFmFlGpAnApGnGpDoFoAoGlGoAmAoGlAmAmDoAoGmAmFlGpGpGoAlGoDlDoApXpFpAnApGnXpAnFlAmAnAoAlDoDlGoFmGnDpAnGnGnGpXpAnDpFlGnGoFnFlGnGoAoAoDpGlAlApGpGnDpAmFmGmFlAoDoDpGlFoDpFlAmAnAoFpAnFnGoFmGpAmGnDpFpGmGnDlGoAoAoGnGoDlAoFnGpDoFmXoDnGnGoApGnDoDoDoFpDlDnFpGnGoFlGoAmFnAnAoDmFnXpDlFnFnGnApFoFmFpAoDpFoDlDnGnGoFlGnGoGlFnAmGnDpFmGlFoFmDoAlXnFoDnAlFpAmDoGnGnFlFoGoDlAmGnGoFoAlDoDnAoGpAmDoAnFoDoGnApFoFmGoGoDoApGnFlGlXpDnApFoAoGnApAnXpGlDoFmFpAoAoGnFlAnDmGoApDpGnGlAmAmAlAmAlXlDoAlXnFpDpGoDpGoAoDpApGnGlGmAmDmXpGmFnFoGlAnAoDlAnAmXoDlFlFpApFoDlAnDoGoFmGoDnFlFpAmDpGpAnGoAnGnDpApFoAoFpAnAlDpApGnAoFpFlGoDoAlAoAlAoGnGlAmAoDmFoFpAoGnGoDmDpApApGlDpDnAnFmeeGnFoAoAnDpAnApGnGlAoFoDpAnAmXmGoAoApGmFlFoDmDlDnFnAmGnGlFoGlFlApFoGlFoDmFpGmAoGpDoAmDnAnAmFmDlDnFpAnAoGoAoXpAmAoGoAlAnAoGoAnFoGoDoDmFoAnApDpGoDnFmDlDnDnFpAoAlAmFoFoDmAnFmAnDnAnGoApAnFoAmGoApGnFoApGmAlGoFmDmFoAlGoFlGmFoFoDpDlGlXoFlGmFoDoDlAoDpGoAoDoGoDmFlAoGmGlFmXoAoFoDlXlXpDoGlAoFlGnAoGnFlFoGnAmDmFmGnGlGoDmDlAnXpFmGoAnFlDpFoAoGlAnFoDmAoFpFlGnGoFnFoAoDoAnDnGoFpAoGmAlApAnApGlGnAnFlDpAnFnGpGoFpAoGnGnGpGoGpGnFpDlFmFpAoFmFoAoAoDoAnAlFoGpAnGpAnApGnAnAoGmGpFoGlGmFpFoAnGlAmXpFmFoDnDpFpDpFmGpAoDlAmDnGpFmAnAoAmGpGoAnFnFpDpDlGoFnAlFlGlFmDpDlFmGlAmAoGoGnDoDlAnAlAlAoFpDoAmGoDoAmFpGpGlGmAoAnXoDoGmDlAoGlAnFmAmAlApAlGoFnFnGnGnDmAoAoGoAnGoAoGpAnXnXpDpFpAmFoAmApGnXoGpXoAmDoFnDlFlAoAmFpAmGpFmGmDpGpFmDnDpAnApAoGnXpFpGnAlFoFlGoAnXnAnFpAnXpGoDlAmFnXoGoDmGlGoFlAmDnApDnGoGoGoDoAoAoGpAnAoGnDoAnAnAmXlAnAnDlGoAoFmAmAoAmDoFoDnGoAmXpGpFoAoFnFoAoAoAoAlGoDlGoFoGpFmAmDoAoXpAnDlAnApDoFlAmFoGoGnFmApAnDoGpDmAoDoDoAoFnFlAmAlAlAoFnGpDnAoFlApGnGoFlGpFmAoDmFnGlDnFmFmFmAoDoDmAoGoAnAlFpGmGoGpGoApFpAmAoDoGnFmGoAnXlAoGpAmAoAoGpDoAoFnDpAnGoApXpGnGnAnGoAlAmAmDlFoAoFnAlDlGnGmGpFoGpGnXpGlGpDoAoFoFpGoAoDlAmDnGpFmAnApAnAoAoDlDmGnAoGoDpAmFlFoGpAmFmDpDmAnFlDpFoFmAlDnDnFmAnGlDoDnDpFmGoAnGpAnApGnXpAlFnGlAlAmFmGoGnFnAoGoDoGnApGnAnFnAoFnAoApFmGoAnDlAnFoAnDmFoApAoFnAnFoXoDoAlAoDlDpAmAoGoAmXpFoFlDoAoDpDmGnGoAnAoAnApAoDpAoGlFoGoFlGmDnAnAmDnAoAnDmFoFlAmGoAlAoDoGlGoGoAnGnGoDpAnGnGnXpGoFnFoAlAlAoFmGoDoFmDpGpAnGoFnFmGnAnAnAlAoAlDoDpGnGnFnAoAnFoDlAnAlGoApDpGoAoDnGnAoAoDoAlFoGoDlAmGpFmAmFnFpGoAlXpDlFmGoDnFlAoGlFpAlGnGoFmDpGpDoApGmAlGoGoApGnFoFpDnXpDnXoGnFlDnFlDpGoAoDpDoGoDnAlDoAnAmAoDoAnDnGoDmAnFpAmAmGnFpAoAnXpDlFmGlGnFnGpAoDlDpGpGoDoGnAoAnDnFlGpFlAoFoAmDlDnGnAmDoFlDpGnXlAnGlApDpAlFnAoDpGnDpDoAnAlAmAoDnAmDoDoFmApGnGnAlAmGnAnAnGpGpGoDpAnAnGnGoGnFmAnGnAmDpFmAmDoGoDnAlAmAnFnDoFpDpGmDlAmGnGoDoGmDoAmDpDlAlAlGoFoDeeDpDnGpFoFmGoAnGmAlDnFmAmFpGmApGnFlAnGpAoDnApFoFmFnFpGoAlFnAnFoGoGlAmFoGlAnGpGpAmGnAmApXoGoGoAoFnGoGlDnDnGoAnGlAnFnAmDmXlGnApGpFlGnGoGlAlAoAoDmFlApFoFmFnGoAlAnFpGlAoGpGoGoGoGpApGoAoApDpAoGpAnGoDnGnGoFlGnGoGlGnAmApAmFpGlAoAmFoAmApAmFpGmFnAmAoAmDlDnDoFmDoAlFnXlApGoDmGpXlDoDoAoFpAnAoFlGnXpDlFmGoGnFpGoGpDpDoAmGnAmDlAnGpDoFoDoApDoAnAoGlAoGpGoAmXpFoFlDoDnDmGpFnFpXoAnXpApAmFmGoAnAoDpFoDoAmAoGoGnDoAmFlDpFoAoGlAnDmGmAnFpAnFmGoDnFlDmGpFnXpGoAlFlFmGoAnDpFoAlFoGpFmDoGpGmDnFnAoDoAmFpGnFoAnGoFmFoAoDlFnGlApAlGmFoGoFpAoFmAoAoAoAoXoDoGlDoXpDmFoAnXoXlAnGpFnGmAoFnAoGmFoXpDnAmGoGlDnFlGnAnAlAlGpGmFoDoFpGpAmGoAnDpGoGpDpAmFoFoGoAmGnDpGpGmDlFlGoDpFlAlFoGpAnAoFlFpGpFoAnAoDlAmDnGpFmGoAoAoGnDmGnXoDlGlGoAmAlGmFoAnXoAnApDpAoAoDpFlAlFoFnAoDoDmGlDlApGnFlGmFpDnFnGnFlDoAnGlGpFmApDnDnDnGnGmDnAnFnFlDpFlGoFoGoAnGnFoAlFpFnFoGpFlGoDnFlAoFmGoAnAmDnDlGlGoDpGpGnAnDmFlDoDnFmDmFoGnAlAnAoAoGpFoDnFpDpFoFmFlGmAlAoFnAoGpGoDnFmDnDoAnApAmAnAlAlAoGoDlAnAoAlDoAlAlGmDoGlDpAmDoDpAoFnXnDnGpGpGlDoXpAnXlGoAnFmFoGlGlDoDnDpGpDoFnAnGoAlGnGnApAmFmGoFoAnApDlFoAmDlDlGpDnDoGlGlAmDnFlGoAoAlDoDnGpFmAmDlApAoAoDnFmDoAnGoDlFnGlApAlGmFoAlFnFlDlFmDnGnXpDnAnGlFoDnAoFoDoAnDnFoDoAmGoFnFlFnGoGoFnAnDnGoGnGpDoFoFmGoAnDlAnFnGpXpAnFpApFlDpGpFlAoGmGoAnDpGnAoGoFmGmAnGpDoFoAoGlAlFoGlGpGnGoFnGoAoDoGnDlGoAoAnGlAlGnDoAmFmDoDoGoAoFpDlGnGoGpAnFoAoAlApAlFmDlAnXnAnGoAlGnAlFoGlGnFlDpDnFpDnFnAnFnGnAoFoXoAlAoDlDlAnGmFmXlXoAoAlGpFlAoDoAnGoFoFlDoXoDmAnFoAlApAoFnGmDpAoFpGpDoGoAoGnFlDnAoAmDlDnDoGpGnDnGoFoApGmAlGoFmDmFoAlFpGnFoAmFoGoDmFlFoFnAoAoDoFoXlGoApAoDnGnGoFlGnGpAnGlGnGmDlAnFpFlDpAmFmDoAmDlDnFmFmFnGoAoDnFpGoDmGpFnFpXoGpDpAlGnXoAoFlGpDlAnAlXlDoGoAnFoAoAoAmGlXlGpDpGmGlFlFoGpFoAoGnApFoFmFoGoDnAmAlAnAoFoAnAlAnDpApFlFlGlAmGnGmFlGnDlFmGnFlGnXnGoDoGmFlGlAnXoFoGnFlGoAlFnGoDlXoAlGpAnFoGoAnGnGoDoFlFoFpDpFoFoDnAoAlXoAnAoFoFoDnXoGnGlDlAmFoFoGpDneee";
         //It's already lower/uppercase pairs and we don't need to reverse transposition. But we do need to remove the "e"s.
@@ -51,6 +35,10 @@ public class Main {
         Map<String, Character> bestCurrentKey = new HashMap<>();
         boolean shouldTryAgain = false;
         Set<Map<String, Character>> usedKeys = new HashSet<>();
+        //tetragrams
+        Tetragrams t = new Tetragrams();
+        Map<String, Double> tetragrams = t.getTetragrams();
+        //System.out.println(tetragrams);
 
         while(attempt < maxAttempts) {
             if(shouldTryAgain) {
@@ -63,7 +51,7 @@ public class Main {
                 shouldTryAgain = nextKey(keyMap, usedKeys);
             }
             String plaintext = decipher(ct, keyMap);
-            double score = getScore(plaintext);
+            double score = getScore(plaintext, tetragrams);
             //Higher score is better
             if(score >= bestCurrentScore) {
                 bestCurrentScore = score;
@@ -325,13 +313,13 @@ public class Main {
      * @param pt - the plaintext to score
      * @return the cumulated score
      */
-    public static Double getScore(String pt) {
+    public static Double getScore(String pt, Map<String, Double> tetragrams) {
         Double score = 0.0;
 
         //Go through the
         for(int i = 0; i < pt.length() - 3; i++) {
             String quartet = pt.substring(i, i + 4);
-            score += 1; //Todo - replace 1 with a check to the tetragram frequencies.
+            score = (tetragrams.containsKey(quartet)) ? tetragrams.get(quartet) : 1.0; //Todo - replace 1 with a check to the tetragram frequencies.
         }
 
         return score;
