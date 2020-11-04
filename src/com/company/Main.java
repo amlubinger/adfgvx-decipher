@@ -8,6 +8,13 @@ import java.util.*;
 /*
  * Simple ADFGVX cipher solver written in Java.
  *
+ * Is it actually for ADFGVX? No, not really.
+ * This is for one specific challenge in class which uses ADFGX style ciphertext except it has letters
+ * ADFGX and lmnop. It also doesn't use columnar transposition. Instead, it separates the main ciphertext
+ * into three sections by placing an "ee" at the breakpoint. Then to undo that transposition, take from the strings in
+ * this order: s1[1]s2[1]s2[2]s3[1]s3[2]s1[2] and so on. Then use that new ciphertext and run it through basically
+ * a monoalphabetic cipher, except each ct pair corresponds to one pt letter.
+ *
  * Authors: Andrew Lubinger and Amy Niu
  */
 public class Main {
@@ -15,9 +22,11 @@ public class Main {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
 
+        //This is the ciphertext which has been converted from the original version by interleaving the three sections which were separated by "ee"
+        //which was done using the other program we wrote in Swift on repl.it:
+        //https://repl.it/@amlubinger/LING-3801-Gold-08-Interleaving-the-strings#main.swift
         String ct = "oGnDpAnFoDnFpAoGpApAnFoGnDpFmGpAnGoDoApAnFoGnGmDmGlAlXpAoDnGnFoFmXnDpAmGpAnFpAlAmGmAoXmApGoGoGnDpAoFlFoApAnGoGmGpAmFlAoDnFoDnFmDmApGoDlFoAoDnFmDoFnFnAlAmFpFpGnGoDnGlAlFmFoFnGoGlAnGoFlFoAmApGoDlFoGlAnGlAmXoFoFoAlDmGlAmFpAnGoGmGpGnAoGpGmGpAmXoDoGnDlAmAmGoDnApDpAnXoGpAmGoDoFmGoGnDlAoGoDnFnAlFpGoApAnGlAoAoDnGoGoDnFnAoGoDlXpAnAlAmGlXpAoAnGoGoFnFpAlAmGnAnDmXlAoXlAoGoGnDpAnApAnFoGpAmGoFlDoDoGnGlDmGoFnFoGlDlAnAlAoApAoGnDpAoFmGoDmDoDnFlAlFmApGoDlFoAoDnFmDoDnFnAlFpGoApAoAlAmAlAnGpAmFpAnFoGlAnFoAoGnDmGpApAnGoGoFmGoDpAnGoFlDnGpFlAnApAnGoGoFmApAoFnAnApGpFoDpAoAmAoXnGoGpGoApAnFoGnGoDnFoDnFoApGnGoGmGoDlAlFlAmGoGnGpFmGoFmDmGlAmFoGnDpAlAmGoGoApApFlAmGoGmFpAnFoGlAnFoAoGnDpAmFoDlFoDoGlAmGoXoApApFlAmGoGmFpAnFoGmXnDoFnGnDlAmGpAoAoGnDpAmApGoDlFoAoDnFmDoDoGnGoFmGoDmDoDnFlAlFnAoFnGoGmXlAnGlApFpFmGoFnXoDmFlAoGpAlFoXlDoDlDoGoXlDoDlXpAoGnDoFpGnGlAnFoAoAoFlFlFlAmGnGnDlAoXpAnGnDlAlFlFmDoFoGoDoGnGnFlAmFpAlDmGoFmFmGpGoGnDpAmGlDoFmGoAmAoDmGnAnDlAmGoAnDlAoXpAnGpFmGpAnGoDoApAnFoGoFlDoGnDpApGnFoDoGpAoAnGoGlAoGpAnGlAnFoAoGnDmGpApAoGoDmFpAmDoFlXpAmGnFoFmGoFlDoFnDoDoFoDnFpAoDmDnDoGpApAnFnFoDnFpAoGoXoFnFpAnDlAoXpAnGmApAnAlAmFpApFmGpAnGoDoApAnFoGlAoGoGnDpApAnFoAoFlDoGnDpAmGpAnAoFnFnGoGmGpGnAoGoDoFnFpAmGlAoFlDoGnDpApGnFoDoGpAoAnGoGlAoGpAnGoGnDmGoFpGmDnDlAnAoFmFpFlFpAnXnAoFmFpFmGoFmFoDnGpAoFlDpAoDmDnDoGpApAnFnGpAlXpAnFoGoXnGpAlXpAnFlAnGpFmGpAnGoDoApAnFoGnDpApAnFoApAoAlAmGmFoXnGpGpFpFoFmGoGlDoFmGmGpApFpGmAlFoDnAlAnFnGoGlAoGpAmDoFlXpAmGnFmFpAnFoGnGoDnFoGnDpAnGoFpGoGnDpFmGoFmFoFoGpAoAnAoDlXoDlFnGpAmGlXoDnApAmGpAlDoFmGmFlAnFoAlAoGoGpAmFpFoGpAoAoGoFmGpAnAoFnFnAoDlFpAoGnDpAoAoDlXoDnGoDoFnFnGlFpAlDoGoFlXpAmGlDmGoFmFoGnDpAnAoDlXoDlFmXlAmGlAnFoAmGpAnAoFnFnGoGmGpGnAoGoDoFnFnDlAoXpAnGmApAlFoDpAlXpAoAoDnFmFpAmGoDoGoFnAmGlAoGoDnAmDoFlXpAmGnFmFpAnFoGpAlGpGlAlFoGmGpAlAoGmFpAnFoGmXoDoGnDoFpGoGmGpAmDlAmGoAoGoFmGlAnApAnDpAoFmGoApAmGpAoAlDpAoApAmGlAlFoGmGoFoFpFnGoGoFnAmGpGnGnDoGnDpAmDmGpAlAoGmGlAoDlFmGoFlAoAnGoGmGoDpDpAoFlDnGpAlXpAnFoGoXnGpAlXpAnFnDpAoDmFpFlFpAmFpAnFoGpAoAmFoFoApAnGoGnAoDlXoDlFnGpAmGlXoDnApAmGpAlDoFmGmFnGoGnDlAoGlFlAoDoAoGnDpAmDmGoFpGnFoAmXoFmGpDlDoFmGlDpGmGoGnDpAmGmGpAlDoFmGmFoDnFoGnDpAnFpAnXoGoApAnAlAoApAnGnDpAlXpAoGoFpAoAoGnDpAmAlFlAnFoAlAlFlFoDnGoFnFlAnAoGmXnDoDnAnDmXoFpGlFoAnDlAlXpApFpGoGnGoDlFlXpAmGmFoFnFpAoXoDnFoGoFnAoDmGnApGlFlAoGoDoFnFlAnFoAmGlAoDnGpAoApFmGoDnApAnGoDnFnGoDnGoGoDnFmDoGnDlAoGmFlAoDnFoGpAnFlAnFnApAoFlDoGnDpAmDoFlFoAnGoGlAnFoAlAmGoAmXlAnGpAnGnGpAnFoGoDlAlFoGoFpAnAoFnFoFmFoDnAmGpAnAoFlXpAmGoXnDoDnGpFoFlFoDnAoXoGoFmXlAmGoAmXpAnGoGpAmGnFoDnFoAoDlAnFnGlAnFoGoDnAoDpFlAoGpAoAoGnDpAlAnGnGoDmFoDlFlAoGoDoFnFoDnGoGpFmGoFmDmGlAmFoFlDoGnDpAoAlAmXpAnGlAnAoGnDlAoXpAnGpDpApFoGnDoDnGpFlFpAoAmDpAnFoFoGoGoFmGpGnFlDoFmGmGpApAlFpAnAoGoDoFnFmGpAoGoDmGpAoAoGoFnDoDnGnDoFmFpAoDnFoFnDoDoFlAnFoAmApAnAlAmFpAlAnFlAoAlXoFnAlAoGpAoFlDnGoFnAoDlAlFlAnFoApAoApGnAlAoGoDoFnFlAlFmGpAlDoFmGmFmAoDoFmDmGlApFnDpAmGlAmGoDnDoFoFmDpAnFmAoFoFmFnGlAoXnGnDoDnGmDmGpAlAoGpAnGoGlAnAnDoDpAlXpAmFpAnFoGmXlAnGoGoFmGpAnGoGoFmGpApFoFpFpGlFlAmGlDlAoDoGnDoDnFoGnDpApFmGpAnGoDoApAnFnAoXlAnFoAoGoFmGpAlXpAmGnGpAoGnDpAoApAoGpAmGoDoFmGlAoGoDoFnFoFlDpAnXpAnApGoGoDlXpApFoFmXpAmGoGnDlAoGnDlAoAnGpAoGoDnFlAlDoGpAmGlAmAmGlAnDlAmFlFoDnFnAoFlFnFnGoApAlAoGnDlAlFoGnDoFpGmDnDnGpGpFpFoFmGoGpAmGnGnDlAlXpApFmGlAoDnGpAoAnDoDnGnAoFmFmFoDoGmFpAnFoGoGoFnAoDlXoDlFnGpAmGlXoDnApAmGpAlDoFmGmFlAnFoAoApAlDpAnFnGpAoFlDnAoDlXoDlFmGoDmDnDoGnGnDlAoXpAnGoDnGmDpAnFpAmGlAlFlFoXlFoDnGoGpAoAlAmFoFnFmDoGnDpAnDoDmDnDpAnFoAoFlDoGnDpAmAoFoGoGoFmFnDlAlFlDoDnFnDoDnGoGoFmGoDlAnFnGmGlAnFpDoDnFmDnGoFlDpGnGpFmGpAnGoDoApAnFoGnGpFmGpAnGoDoApAnFoGnDlAoXpAnGlAlFnGoFnGpAmGlXpAoAlAnGlAmFpAmFmApAmGoFlDoGnDpAoFnGpGmAoFlAmGoAoFlDoGmGpGnGoGpApAnGoGnDpAlAnGnGoFnAoDlAoGoDoFnFmApAoGmXpApAnFpFmGpAnGoDoApAnFoGnDlAoXpAnGlAnFoAlFlAnFoAmDmGlAnFoGpAoApGnAlAoGoDoFnFnDlAnGoGoFoAoFmXoDoGnDoGnDpAlDlAnAoGoGnDlAoGnDpAnGpAmGlXpAoAlAnGoGnDpAmDoFlXpAmGnFoFmGoFlDoFnDoDoFlAoGoGnDpAoGoDmFpAoGnDlAoGoGnDpAnGoGlAoGpAlAnAnApApFoGpAoAoGnDpAlDpAoApAmGlAlFmFoFmGmGoDlFlFlAnAoGmXnDoDnAnDpAnGoGlAmAlFoDnGnDpAoAlFlAnFoAmDmGlAnFoGnAoFlFlFpAmDpAnGoDnFnAlFpGoAoDnFmDoFnGpGlAnAmGoFnGnGoGnDpAnAoFpGnFoGmGoXoGnDpAlDlAnAoGoGnDlAoGnDlAoXpAnGnGoGmGoFnFmDlFoXlAoAlXoFnAlAoGpAoAlDoFmGpFmGoFlXoDoAoDnFmDoGnDpAnGoGpGoApAnFoGnGoFlDoFnDoDoFmXoDoGnDmFpAnAnDlAnFoDnAlAlFpAoApGnAlAoGoDoFnFlDpGmGoGnDpAmGnAoFnFnFpAnAoGpAoAnDoDmFoGoFnDlAoXpAnGnDlAlFlFnGoDnFnApAoGnDpAmApGoDlFoAoDnFmDnDoFpGnGpAoAoGnDpAoDnFoDoGoDlAlFoDnFoApGnGoGmGoDlAlFlAmGoGnGpFmGoFmDmGlAmFoFnFnAlAmFpFpGnGoGnDpAlFoFmXpAmGlDlFoFoFmGoFmGoDmDoDnFlAlFlFoXnAoFnFoGlAoDnFpAoAlAlDoFpGnFoAmGoXlDoFmGoGnDpApGnGpAoFlDoDnFoApGnGoGmGoDlAlFlAmGoGnGnGoGpGoApAnFoGnGlAlFoGnDoFpGmDnDnDlAoXpAnGpDnFpAmXoFlDoGnDpAnFlAmFoDnFmDoFlDoGnDpAmApGoDlFoAoDnFmDpFmGoDoFmGoGoFnDoDnGoApAlAoGnDoDnFlAnFpGlAmGoXpAoDmDnDoGpApAnFnFoDnFpAoGoXoGnDmGpApAnDpAnFpAlXpAmGnGlAmXoDoGnAoFmFpFlFpAoGpAoAnDlAoXpAnGnDlAlFlFmXlAnGlDoDmGnGoGoFnAnApGpFoDpAoAoGnDlAoGlDpAmAmGpGlAmGoXlAlDoGpAmGnDpAlAoGmXlAnGlDoDnFlAlFlFoXnGpGpFpFlFoDpAoAoGoFoGnDpAmApGoDlFoAoDnFmDpGnFoApAmGoGnDoDnGlFlAmGmDpAlAmGnAnDmXlAoXpAnFoGmGlAnFnApAlFoDpAnGlAlDpAnFnApAoAoFlDlDpFlAnGnGlAmDpAmXoDoGnDlAnGmFlAlFlFpAmGnApAoDlFoDnFmDlAmGnAnDoFlDoDoGnGoFmXnFmApGoGoGnDoDnGnGmFlAlFlFpAmGlAmGnAnDpAnXoGpAnFoAnGpGnGoGpFlAnGoGoGnDpAlDpAnFnApAnGoFoGnDlAoGoXoFpGnAlAnFmGpAlAnAnDpGnFoApAmGoGnDpAnAoFmGnFpAmGoFlDoDoGoGoFlDoDnFoAlAlFpAoAmDpAlAnFoAoFnFoGnDoDnGlFpAoAmDpAlAoGmXoDmDlAnFoAmAoFpGnFoAoGoFoGnDoDnGoGmXoDmDoGnDpAmGlApDpDlApDlAmGlAlFoDpAlFoDnGoGpAnFoDnFmD";
-        //It's already lower/uppercase pairs and we don't need to reverse transposition. But we do need to remove the "e"s.
-        //Note: I am assuming the "e"s are meaningless and can be removed, but it may be worthwhile to look back again later.
+        //It's already lower/uppercase pairs and we already did the transposition, just make it lowercase so it's easy to refer to.
         ct = ct.toLowerCase();
 
         System.out.println("Enter the number of maximum attempts I should make:\n");
@@ -50,6 +59,7 @@ public class Main {
                 //Get next key normally.
                 shouldTryAgain = nextKey(keyMap, usedKeys);
             }
+            //Decipher with the key and score it.
             String plaintext = decipher(ct, keyMap);
             double score = getScore(plaintext, tetragrams);
             if(attempt % 1000 == 0) {
@@ -240,6 +250,8 @@ public class Main {
         Collections.shuffle(alphabet, new Random());
 
         Map<String, Character> keyMap = new HashMap<>();
+
+        //Add the ct->pt items.
         for(int i = 0; i < ctCombos.size(); i++) {
             keyMap.put(ctCombos.get(i), alphabet.get(i));
         }
@@ -320,7 +332,7 @@ public class Main {
     public static Double getScore(String pt, Map<String, Double> tetragrams) {
         Double score = 0.0;
 
-        //Go through the
+        //Go through each set of four characters and find it in the tetragrams map to count the score.
         for(int i = 0; i < pt.length() - 3; i++) {
             String quartet = pt.substring(i, i + 4);
             score += (tetragrams.containsKey(quartet)) ? tetragrams.get(quartet) : 1.0;
